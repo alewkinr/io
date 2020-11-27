@@ -1,0 +1,28 @@
+http:
+  middlewares:
+    auth:
+      forwardAuth:
+        address: "http://auth:8080/api/v1/sessions/status"
+
+
+    stripprefix:
+      stripPrefixRegex:
+        regex:
+          - "/[a-z\\d-]+/"
+
+    cors:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - DELETE
+          - PATCH
+          - HEAD
+          - OPTIONS
+          - PUT
+        accessControlAllowHeaders:
+          - "*"
+        accessControlAllowOriginList:
+          - localhost
+        accessControlMaxAge: 1000
+        addVaryHeader: true

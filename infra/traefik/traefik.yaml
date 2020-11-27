@@ -1,0 +1,19 @@
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  file:
+    directory: /etc/traefik/dynamic
+  docker:
+    exposedByDefault: false
+
+accessLog: 
+  filters:    
+      statusCodes:
+        - "200"
+        - "300-302"
+        - "404"
+entryPoints:
+  web:
+    address: ":80"
