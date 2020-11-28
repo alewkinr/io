@@ -6,6 +6,7 @@ networks:
 
 volumes:
   pg-data:
+  legal-data:
 
 services:
 #  traefik:
@@ -35,6 +36,9 @@ services:
 
   legal-db:
     image: postgres:10.5
+    build:
+      context: ./infra/legal_db
+      dockerfile: Dockerfile
     restart: always
     container_name: legal-db
     networks:
