@@ -11,3 +11,9 @@ freeze:
 
 require:
 	pip install -r requirements.txt
+
+dev:
+	docker-compose  up -d
+
+rebuild:
+	docker-compose up -d --build

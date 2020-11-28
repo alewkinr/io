@@ -8,12 +8,8 @@ providers:
   docker:
     exposedByDefault: false
 
-accessLog: 
-  filters:    
-      statusCodes:
-        - "200"
-        - "300-302"
-        - "404"
+accessLog: {}
+
 entryPoints:
   web:
     address: ":80"
