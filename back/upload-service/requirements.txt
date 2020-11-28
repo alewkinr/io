@@ -1,6 +1,5 @@
 uvicorn==0.12.3
 fastapi==0.61.2
-python-multipart==0.0.5
 email-validator==1.0.5
 requests==2.23.0
 bcrypt==3.2.0
@@ -18,5 +17,5 @@ pytest==5.4.1
 cryptography==3.2.1
 python-jose==3.1.0
 sqlalchemy_utils==0.36.8
-python-multipart==1.15.0
+python-multipart==0.0.5
 

@@ -861,9 +861,9 @@ htmlcov
 .mypy_cache
 docker-stack.yml
 .cache
-/back/auth/cookiecutter-config-file.yml
-/back/auth/pyproject.toml
-/back/auth/sample-cookiecutter-config-file.yml
+/back/auth-service/cookiecutter-config-file.yml
+/back/auth-service/pyproject.toml
+/back/auth-service/sample-cookiecutter-config-file.yml
 skeleton/*
 !/infra/postgres/.gitkeep
 !/infra/postgres/.env
