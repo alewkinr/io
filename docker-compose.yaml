@@ -32,6 +32,35 @@ services:
     env_file:
       - ./infra/postgres/.env
 
+
+  legal-db:
+    image: postgres:10.5
+    restart: always
+    container_name: legal-db
+    networks:
+      - shared
+    volumes:
+      - "./infra/legal_db/data:/var/lib/postgresql/data"
+    ports:
+      - 6432:5432
+    env_file:
+      - ./infra/legal_db/.env
+
+
+  license-supervisor:
+    image: docker.pkg.github.com/alewkinr/io/license-supervisor:latest
+    restart: always
+    container_name: license-supervisor
+    build:
+      context: back/license-supervisor
+      dockerfile: Dockerfile
+    command: /supercronic /crontab
+    networks:
+      - shared
+    volumes:
+      - "./back/license-supervisor:/service"
+
+
   auth:
     image: docker.pkg.github.com/alewkinr/io/auth:latest
     build:
@@ -46,9 +75,9 @@ services:
     networks:
       - shared
     ports:
-      - 9090:9090
+      - 9090:8080
     volumes:
-    - ./back/auth-service:/service
+    - "./back/auth-service:/service"
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.auth.rule=Host(`*`)"
@@ -74,4 +103,4 @@ services:
     ports:
       - 8080:8080
     volumes:
-    - ./back/upload-service:/service
+    - "./back/upload-service:/service"
