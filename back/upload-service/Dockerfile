@@ -8,5 +8,5 @@ RUN pip install -r requirements.txt
 ENV PYTHONPATH=/service
 WORKDIR /service
 
-EXPOSE 8081
+EXPOSE $SERVER_PORT
 ENTRYPOINT ["sh", "-c", "/service/prestart.sh"]

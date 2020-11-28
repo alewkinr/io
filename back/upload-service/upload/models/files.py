@@ -29,10 +29,5 @@ class File(Base):
     status = Column(String, nullable=False, default="new", index=True)
     result = Column(String, nullable=True, index=True)
     type = Column(String, nullable=False, default="audio", index=True)
-    file = Column(LargeBinary, nullable=False)
-
-
-class FileWithLink(File):
-    """ Файл загруженный по ссылке """
-
+    saved_file_path = Column(String, nullable=False)
     download_url = Column(URLType, nullable=True)

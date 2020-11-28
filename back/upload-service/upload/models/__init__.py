@@ -1,1 +1,1 @@
-from .files import File, FileWithLink
+from .files import File

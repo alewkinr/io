@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from fastapi import UploadFile
+from pydantic import BaseModel, NoneBytes
 from upload.models.files import FileResultEnum, FileStatusEnum
 
 
@@ -7,13 +8,15 @@ class FileUpload(BaseModel):
 
     user_id: int
     type: str
-    file: bytes
+    file: UploadFile
 
 
-class FileFromDB(FileUpload):
+class FileUploadInDB(BaseModel):
     """ Файл в БД """
 
-    id: int
+    user_id: int
+    type: str
+    saved_file_path: str  # FilePath is not properly parsing
 
 
 class FileStatus(BaseModel):
@@ -21,4 +24,3 @@ class FileStatus(BaseModel):
 
     id: int
     status: FileStatusEnum
-    result: FileResultEnum

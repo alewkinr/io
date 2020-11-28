@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
-@router.post("/", response_model=file_upload.FileFromDB)
+@router.post("/", response_model=file_upload.FileStatus)
 async def upload_file(
     db: Session = Depends(deps.get_db),
     _id: int = Form(...),
@@ -24,21 +24,17 @@ async def upload_file(
 ) -> Any:
     """ Загружаем файл на сервер """
     try:
-        content = await file.read()
         _file = crud_files.file.upload(
             db=db,
-            file=file_upload.FileUpload(
+            _file=file_upload.FileUpload(
                 user_id=user_id,
                 type=_type,
-                file=content,
+                file=file,
             ),
         )
 
-        return file_upload.FileFromDB(
-            id=_file.id, user_id=_file.user_id, type=_file.type, file=_file.file
-        )
+        return file_upload.FileStatus(id=_file.id, status=_file.status)
     except Exception as err:
-        logger.error(f"error to upload file {err}")
         return InternalServerErr("error to upload file")
 
 

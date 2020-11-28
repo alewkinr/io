@@ -22,4 +22,4 @@ if settings.BACKEND_CORS_ORIGINS:
 app.include_router(v1, prefix=settings.API_V1_STR)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8081)
+    uvicorn.run(app, host="0.0.0.0", port=settings.SERVER_PORT)

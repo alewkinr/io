@@ -1,7 +1,9 @@
 import secrets
+from os import path
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseSettings, HttpUrl, PostgresDsn, validator
+from pydantic import (AnyHttpUrl, BaseSettings, DirectoryPath, HttpUrl,
+                      PostgresDsn, validator)
 
 
 class Settings(BaseSettings):
@@ -9,9 +11,22 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
+    SERVER_PORT: int = 8080
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
+
+    STATIC_FILES_DIR: DirectoryPath
+
+    @validator("STATIC_FILES_DIR", pre=True)
+    def static_directory_exists(cls, v: DirectoryPath):
+        _path_from_project_source = f"{path.pardir}/{v}"
+        _is_exists = path.exists(_path_from_project_source)
+        _is_dir = path.isdir(_path_from_project_source)
+        if _is_exists and _is_dir:
+            return _path_from_project_source
+        return ValueError("set STATIC_FILES_DIR variable")
+
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)

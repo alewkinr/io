@@ -1,10 +1,14 @@
+from os import path
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from upload.core.config import settings
 from upload.crud.base import CRUDBase
 from upload.models.files import File
 from upload.schemas.file_upload import FileUpload as FileSchema
+from upload.schemas.file_upload import FileUploadInDB
+from upload.utils import save_upload_file
 
 
 class CRUDFile(CRUDBase[File, FileSchema]):
@@ -12,8 +16,16 @@ class CRUDFile(CRUDBase[File, FileSchema]):
 
     def upload(self, db: Session, *, _file: FileSchema) -> File:
         """ Загружаем файл на сервер и схораняем мета информацию в БД """
-        # todo: add save to filesystem logic
-        return super(CRUDFile, self).create(db, obj_in=_file)
+        _file_dist_path = f"{settings.STATIC_FILES_DIR}/{_file.file.filename}"
+
+        _file_in_db = FileUploadInDB(
+            user_id=_file.user_id,
+            type=_file.type,
+            saved_file_path=path.abspath(_file_dist_path),
+        )
+        save_upload_file(file=_file.file, dest_path=_file_dist_path)
+
+        return super(CRUDFile, self).create(db, obj_in=_file_in_db)
 
     def find_by_id(self, db: Session, *, _id: int) -> File:
         """ Получаем файл по ID"""

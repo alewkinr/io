@@ -28,3 +28,12 @@ class BadRequestErr(HTTPException):
             status_code=status.HTTP_400_BAD_REQUEST, detail=detail, headers=None
         )
         pass
+
+
+class SaveFileException(Exception):
+    """ Ошибка сохранения файла"""
+
+    def __init__(self, err: Exception) -> None:
+        logger.error(f"error to save file: {err}")
+        super().__init__(err)
+        pass
