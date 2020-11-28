@@ -52,10 +52,10 @@ def login(
 
 
 @router.get("/status", response_model=schemas.TokenValid)
-def validate_token(req: Request) -> Any:
+async def validate_token(req: Request) -> Any:
     """ OAuth2-like валидация токено """
 
-    token = _reusable_OAuth(request=req)
+    token = await _reusable_OAuth(request=req)
     if not token:
         raise errors.NotAuthorizedErr()
 
