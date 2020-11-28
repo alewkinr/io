@@ -7,10 +7,12 @@ class FileLinks(BaseModel):
     user_id: int
     type: str
     link: HttpUrl
-    file: bytes
 
 
-class FileLinksFromDB(FileLinks):
+class FileLinksUploadInDB(BaseModel):
     """ Файл в БД """
 
-    id: int
+    user_id: int
+    type: str
+    download_url: HttpUrl
+    saved_file_path: str

@@ -37,3 +37,11 @@ class SaveFileException(Exception):
         logger.error(f"error to save file: {err}")
         super().__init__(err)
         pass
+
+
+class DownloadNotFoundFileErr(Exception):
+    """ Ошибка скачивания файла, похожа на 404"""
+
+    def __init__(self, err: str) -> None:
+        super().__init__(err)
+        pass

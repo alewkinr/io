@@ -5,8 +5,6 @@ from pathlib import Path
 from fastapi import UploadFile
 from upload.core.errors import SaveFileException
 
-FILENAME_ENCODING = "ascii"
-
 
 def save_upload_file(file: UploadFile, dest_path: str) -> None:
     """ Сохраняем файл на файловую систему"""
