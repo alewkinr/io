@@ -868,3 +868,5 @@ skeleton/*
 !/infra/postgres/.gitkeep
 !/infra/postgres/.env
 /infra/postgres/data
+!/back/upload-service/static/.*
+/back/upload-service/static/*
