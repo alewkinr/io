@@ -19,7 +19,10 @@ def save_upload_file(file: UploadFile, dest_path: str) -> None:
         raise SaveFileException(err=err)
 
 
-def generate_safe_dest(dest_dir: str, *, filename: str) -> str:
+def generate_safe_dest(dest_dir: str, filename: str) -> str:
     """ Генерируем валидный путь до файла """
-    _filename = base64.urlsafe_b64encode(filename.encode(FILENAME_ENCODING))
-    return f"{dest_dir}/{_filename}"
+    try:
+        _filename = base64.urlsafe_b64encode(str.encode(filename)).decode()
+        return f"{dest_dir}/{_filename}"
+    except Exception as err:
+        return f"{err}"
