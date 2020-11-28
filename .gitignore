@@ -102,7 +102,7 @@ Icon
 # Thumbnails
 ._*
 
-# Files that might appear in the root of a volume
+# FileUpload that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
 .Spotlight-V100
@@ -189,7 +189,7 @@ ScaffoldingReadMe.txt
 # StyleCop
 StyleCopReport.xml
 
-# Files built by Visual Studio
+# FileUpload built by Visual Studio
 *_i.c
 *_p.c
 *_h.h
@@ -238,7 +238,7 @@ ipch/
 *.vspx
 *.sap
 
-# Visual Studio Trace Files
+# Visual Studio Trace FileUpload
 *.e2e
 
 # TFS 2012 Local Workspace
@@ -861,9 +861,9 @@ htmlcov
 .mypy_cache
 docker-stack.yml
 .cache
-/back/auth/cookiecutter-config-file.yml
-/back/auth/pyproject.toml
-/back/auth/sample-cookiecutter-config-file.yml
+/back/auth-service/cookiecutter-config-file.yml
+/back/auth-service/pyproject.toml
+/back/auth-service/sample-cookiecutter-config-file.yml
 skeleton/*
 !/infra/postgres/.gitkeep
 !/infra/postgres/.env

@@ -35,20 +35,20 @@ services:
   auth:
     image: docker.pkg.github.com/alewkinr/io/auth:latest
     build:
-      context: ./back/auth
+      context: back/auth-service
       dockerfile: Dockerfile
     container_name: auth
     restart: always
     depends_on:
       - postgres
     env_file:
-      - ./back/auth/.env
+      - back/auth-service/.env
     networks:
       - shared
     ports:
-      - 8080:8080
+      - 9090:9090
     volumes:
-    - ./back/auth:/service
+    - ./back/auth-service:/service
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.auth.rule=Host(`*`)"
@@ -56,3 +56,22 @@ services:
 #      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)"
 #      - "traefik.http.routers.auth.middlewares=cors@file,stripprefix@file"
 #      - "traefik.http.routers.auth.entrypoints=web"
+
+
+  upload:
+    image: docker.pkg.github.com/alewkinr/io/upload:latest
+    build:
+      context: back/upload-service
+      dockerfile: Dockerfile
+    container_name: upload
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - back/upload-service/.env
+    networks:
+      - shared
+    ports:
+      - 8080:8080
+    volumes:
+    - ./back/upload-service:/service
