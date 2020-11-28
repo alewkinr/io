@@ -1,0 +1,6 @@
+# Авторизация пользователя
+# https://www.notion.so/alewkin/auth-1332c3e16fbc4ad08bcac97988ee1a0b#c5a44ab124a84143bb478b5f97a10013
+POST /api/v1/sessions/
+Host: 127.0.0.1:8080
+Content-Type: multipart/form-data
+###

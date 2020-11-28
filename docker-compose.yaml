@@ -1,52 +1,58 @@
-version: '3.2'
+version: '3'
 
 networks:
   shared:
-    driver: bridge
+    external: false
 
 volumes:
-    prometheus_data: {}
-    postgres_data: {}
+  pg-data:
 
 services:
-  traefik:
-    image: traefik:v2.2.10
-    restart: always
-    container_name: traefik
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - "./infra/traefik/traefik.yaml:/etc/traefik/traefik.yaml"
-      - "./infra/traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      - shared
+#  traefik:
+#    image: traefik:v2.3
+#    command: --api.insecure=true --providers.docker
+#    networks:
+#      - shared
+#    volumes:
+##      - "./infra/traefik/traefik.yaml:/etc/traefik/traefik.yaml"
+##      - "./infra/traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml"
+#      - "/var/run/docker.sock:/var/run/docker.sock"
+
 
   postgres:
     image: postgres:10.5
     restart: always
     container_name: postgres
+    networks:
+      - shared
     volumes:
       - "./infra/postgres/data:/var/lib/postgresql/data"
-      - "./infra/postgres/.env:/.env"
     ports:
       - 5432:5432
     env_file:
-      - /.env
+      - ./infra/postgres/.env
 
   auth:
     image: docker.pkg.github.com/alewkinr/io/auth:latest
-    container_name: io
+    build:
+      context: ./back/auth
+      dockerfile: Dockerfile
+    container_name: auth
     restart: always
-    expose:
-      - 8080
+    depends_on:
+      - postgres
     env_file:
-      - /.env
+      - ./back/auth/.env
     networks:
       - shared
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`*`) && PathPrefix(`/auth`)"
-      - "traefik.http.routers.auth.middlewares=cors@file,stripprefix@file"
-      - "traefik.http.routers.auth.entrypoints=web"
+    ports:
+      - 8080:8080
+    volumes:
+    - ./back/auth:/service
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.auth.rule=Host(`*`)"
+#      - "traefik.http.services.auth.loadbalancer.server.port=8080"
+#      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)"
+#      - "traefik.http.routers.auth.middlewares=cors@file,stripprefix@file"
+#      - "traefik.http.routers.auth.entrypoints=web"
