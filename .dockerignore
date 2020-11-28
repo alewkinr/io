@@ -861,3 +861,4 @@ htmlcov
 .mypy_cache
 docker-stack.yml
 .cache
+!/infra/legal_db/data/
