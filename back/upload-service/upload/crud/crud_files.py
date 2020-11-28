@@ -8,7 +8,7 @@ from upload.crud.base import CRUDBase
 from upload.models.files import File
 from upload.schemas.file_upload import FileUpload as FileSchema
 from upload.schemas.file_upload import FileUploadInDB
-from upload.utils import save_upload_file
+from upload.utils import generate_safe_dest, save_upload_file
 
 
 class CRUDFile(CRUDBase[File, FileSchema]):
@@ -16,7 +16,9 @@ class CRUDFile(CRUDBase[File, FileSchema]):
 
     def upload(self, db: Session, *, _file: FileSchema) -> File:
         """ Загружаем файл на сервер и схораняем мета информацию в БД """
-        _file_dist_path = f"{settings.STATIC_FILES_DIR}/{_file.file.filename}"
+        _file_dist_path = generate_safe_dest(
+            dest_dir=settings.STATIC_FILES_DIR, filename=_file.file.filename
+        )
 
         _file_in_db = FileUploadInDB(
             user_id=_file.user_id,
