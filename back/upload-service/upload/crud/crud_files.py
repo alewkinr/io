@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Optional
+from typing import List, Optional, Dict, Any, Union
 
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,8 @@ from upload.models.files import File, FileStatusEnum
 from upload.schemas.file_upload import FileUpload as FileSchema
 from upload.schemas.file_upload import FileUploadInDB
 from upload.utils import generate_safe_dest, save_upload_file
+from upload.schemas.recognized_file import RecognizedFileWithChekResultID
+from upload.models.files import FileStatusEnum
 
 
 class CRUDFile(CRUDBase[File, FileSchema]):
@@ -72,6 +74,18 @@ class CRUDFile(CRUDBase[File, FileSchema]):
             .all()
         )
         return _files
+
+    def update(self, db: Session, *, obj_in: RecognizedFileWithChekResultID) -> File:
+        """ Обновляем в базе данных сущность """
+        _db_file = self.find_by_id(db=db, _id=obj_in.id)
+        _db_file.artist = (obj_in.artist,)
+        _db_file.title = obj_in.title
+        _db_file.song_link = obj_in.song_link
+        _db_file.result = obj_in.result
+        _db_file.status = FileStatusEnum.finished
+        db.commit()
+        db.refresh(_db_file)
+        return _db_file
 
 
 file = CRUDFile(File)
