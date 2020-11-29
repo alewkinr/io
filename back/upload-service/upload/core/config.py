@@ -18,9 +18,8 @@ class Settings(BaseSettings):
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
     SERVER_PORT: int = 8080
-    # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
-    # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
-    # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
+
+    LICENCE_SUPERVISOR_BASE_URL: HttpUrl
 
     STATIC_FILES_DIR: DirectoryPath
 
@@ -44,11 +43,20 @@ class Settings(BaseSettings):
         raise ValueError(v)
 
     PROJECT_NAME: str
+
     SENTRY_DSN: Optional[HttpUrl] = None
 
     @validator("SENTRY_DSN", pre=True)
     def sentry_dsn_can_be_blank(cls, v: str) -> Optional[str]:
         if len(v) == 0:
+            return None
+        return v
+
+    AUDD_API_TOKEN: str = None
+
+    @validator("AUDD_API_TOKEN", pre=True)
+    def audd_token_is_not_none(cls, v: str) -> Optional[str]:
+        if v is None or len(v) == 0:
             return None
         return v
 

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import Column, Integer, LargeBinary, String
+from sqlalchemy import Column, Integer, String
 
 from sqlalchemy_utils.types import URLType
 from upload.db.base_class import Base
@@ -26,8 +26,11 @@ class File(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, primary_key=False, index=True, nullable=False)
-    status = Column(String, nullable=False, default="new", index=True)
+    status = Column(String, nullable=False, default=FileStatusEnum.new, index=True)
     result = Column(String, nullable=True, index=True)
     type = Column(String, nullable=False, default="audio", index=True)
     saved_file_path = Column(String, nullable=False)
     download_url = Column(URLType, nullable=True)
+    artist = Column(String, nullable=True)
+    title = Column(String, nullable=True)
+    song_link = Column(URLType, nullable=True)

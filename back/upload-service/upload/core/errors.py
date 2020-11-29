@@ -45,3 +45,12 @@ class DownloadNotFoundFileErr(Exception):
     def __init__(self, err: str) -> None:
         super().__init__(err)
         pass
+
+
+class FileRecognitionErr(Exception):
+    """ Ошибка опознования файла"""
+
+    def __init__(self, err: Exception) -> None:
+        logger.error(f"error to recognize file: {err}")
+        super().__init__(err)
+        pass

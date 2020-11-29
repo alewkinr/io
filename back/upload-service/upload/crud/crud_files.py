@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from upload.core.config import settings
 from upload.crud.base import CRUDBase
-from upload.models.files import File
+from upload.models.files import File, FileStatusEnum
 from upload.schemas.file_upload import FileUpload as FileSchema
 from upload.schemas.file_upload import FileUploadInDB
 from upload.utils import generate_safe_dest, save_upload_file
@@ -57,6 +57,21 @@ class CRUDFile(CRUDBase[File, FileSchema]):
         if _type is None:
             return _by_user_id
         return list(filter(lambda f: f.type == _type, _by_user_id))
+
+    def find_pending_files_by_type(
+        self, db: Session, *, _type: str
+    ) -> Optional[List[File]]:
+        """ Достаем файлы из БД, которые еще не отправлены на проверку """
+        _files = (
+            db.query(self.model)
+            .filter(
+                File.type == _type,
+                File.status == FileStatusEnum.new,
+                File.result.is_(None),
+            )
+            .all()
+        )
+        return _files
 
 
 file = CRUDFile(File)
