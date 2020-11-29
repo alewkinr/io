@@ -1,6 +1,7 @@
 from fastapi import UploadFile
-from pydantic import BaseModel, NoneBytes
+from pydantic import BaseModel
 from upload.models.files import FileResultEnum, FileStatusEnum
+from typing import Optional
 
 
 class FileUpload(BaseModel):
@@ -24,3 +25,4 @@ class FileStatus(BaseModel):
 
     id: int
     status: FileStatusEnum
+    result: Optional[FileResultEnum] = None

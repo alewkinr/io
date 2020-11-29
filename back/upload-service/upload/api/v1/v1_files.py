@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 @router.post("/", response_model=file_upload.FileStatus)
 async def upload_file(
+    bgt: BackgroundTasks,
     rec: AuddRecognizer = Depends(deps.get_recognizer),
     db: Session = Depends(deps.get_db),
     _id: int = Form(...),
@@ -37,9 +38,11 @@ async def upload_file(
         )
 
         # отправляем асинхронный запрос в celery
-        # bgt.add_task(fingerprint_file, _id=_file.id)
-        fingerprint_file(rec=rec, db=db, _id=_file.id)
-        return file_upload.FileStatus(id=_file.id, status=_file.status)
+        bgt.add_task(fingerprint_file, rec=rec, db=db, _id=_file.id)
+        # fingerprint_file(rec=rec, db=db, _id=_file.id)
+        return file_upload.FileStatus(
+            id=_file.id, status=_file.status, result=_file.result
+        )
     except Exception as err:
         return InternalServerErr(f"error to upload file, {err}")
 
@@ -55,7 +58,9 @@ async def get_file_status(
     try:
 
         status_file = crud_files.file.find_status_by_id(db=db, _id=_id)
-        return file_upload.FileStatus(id=status_file.id, status=status_file.status)
+        return file_upload.FileStatus(
+            id=status_file.id, status=status_file.status, result=status_file.result
+        )
     except Exception as err:
         logger.error(f"error to find file by status id: {err}")
         return InternalServerErr("unable to upload file")
