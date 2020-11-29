@@ -3,11 +3,13 @@ from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, UploadFile, BackgroundTasks
 from upload.api import deps
 from upload.core.errors import BadRequestErr, InternalServerErr
 from upload.crud import crud_files
 from upload.schemas import file_upload
+from upload.worker.worker import fingerprint_file
+from upload.recognizer.audd import AuddRecognizer
 
 router = APIRouter()
 logging.basicConfig(level=logging.ERROR)
@@ -16,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 @router.post("/", response_model=file_upload.FileStatus)
 async def upload_file(
+    rec: AuddRecognizer = Depends(deps.get_recognizer),
     db: Session = Depends(deps.get_db),
     _id: int = Form(...),
     user_id: int = Form(...),
@@ -33,9 +36,12 @@ async def upload_file(
             ),
         )
 
+        # отправляем асинхронный запрос в celery
+        # bgt.add_task(fingerprint_file, _id=_file.id)
+        fingerprint_file(rec=rec, db=db, _id=_file.id)
         return file_upload.FileStatus(id=_file.id, status=_file.status)
     except Exception as err:
-        return InternalServerErr("error to upload file")
+        return InternalServerErr(f"error to upload file, {err}")
 
 
 @router.get("/status", response_model=file_upload.FileStatus)
@@ -49,9 +55,7 @@ async def get_file_status(
     try:
 
         status_file = crud_files.file.find_status_by_id(db=db, _id=_id)
-        return file_upload.FileStatus(
-            id=status_file.id, status=status_file.status, result=status_file.result
-        )
+        return file_upload.FileStatus(id=status_file.id, status=status_file.status)
     except Exception as err:
         logger.error(f"error to find file by status id: {err}")
         return InternalServerErr("unable to upload file")

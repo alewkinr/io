@@ -105,3 +105,21 @@ services:
       - 8080:8080
     volumes:
     - "./back/upload-service:/service"
+
+  queue:
+    image: rabbitmq:3
+    container_name: queue
+    ports:
+      - 5672:5672
+    env_file:
+      - ./infra/queue/.env
+
+#  flower:
+#    image: mher/flower
+#    container_name: flower
+#    networks:
+#      - shared
+#    env_file:
+#      - infra/queue/.env
+#    command:
+#      - "--broker=amqp://guest@queue:5672//"
