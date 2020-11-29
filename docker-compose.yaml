@@ -39,6 +39,7 @@ services:
 
   legal:
     image: docker.pkg.github.com/alewkinr/io/legal:latest
+    hostname: legal
     build:
       context: back/legal-service
       dockerfile: Dockerfile

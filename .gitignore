@@ -1,3 +1,4 @@
+!/back/scripts/**
 # Created by .ignore support plugin (hsz.mobi)
 ### GitBook template
 # Node rules:
@@ -867,3 +868,4 @@ skeleton/*
 !/infra/postgres/data
 !/back/upload-service/static/.*
 /back/upload-service/static/*
+
