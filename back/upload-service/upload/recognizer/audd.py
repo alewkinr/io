@@ -11,16 +11,10 @@ from upload.models.files import FileResultEnum
 class AuddRecognizer(IRecognizer, ABC):
     """ Распознователь музыки через сервис audd.io """
 
-    def get_file_from_disk(self, des_path: str) -> BinaryIO:
-        """ Читаем айдиозапись из файла """
-        _file = open(des_path, "rb")
-        _file.close()
-        return _file
-
-    def recognize(self, file: BinaryIO) -> Optional[RecognizedFile]:
+    def recognize(self, file_path: str) -> Optional[RecognizedFile]:
         """ Отправляем файл в систему распознования """
         try:
-            _data = fetch_from_audd(file=file)
+            _data = fetch_from_audd(file_path=file_path)
             if _data is None:
                 return None
         except Exception as err:

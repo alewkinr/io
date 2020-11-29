@@ -1,5 +1,5 @@
 import secrets
-from os import path
+from os import path, getenv
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import (
@@ -19,18 +19,25 @@ class Settings(BaseSettings):
     SERVER_HOST: AnyHttpUrl
     SERVER_PORT: int = 8080
 
-    LICENCE_SUPERVISOR_BASE_URL: HttpUrl
+    LICENCE_SUPERVISOR_BASE_URL: str
 
     STATIC_FILES_DIR: DirectoryPath
 
     @validator("STATIC_FILES_DIR", pre=True)
     def static_directory_exists(cls, v: DirectoryPath):
+        # todo: debugging setting
+
+        if not bool(getenv("IS_DOCKER")):
+            return path.abspath(f"{path.pardir}/../upload-service/static")
+
         _path_from_project_source = f"{path.pardir}/{v}"
         _is_exists = path.exists(_path_from_project_source)
         _is_dir = path.isdir(_path_from_project_source)
         if _is_exists and _is_dir:
             return _path_from_project_source
         return ValueError("set STATIC_FILES_DIR variable")
+
+    RABBIT_MQ_DSN: str
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 

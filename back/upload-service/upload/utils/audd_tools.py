@@ -1,19 +1,21 @@
 import requests
 from upload.core.config import settings
-from typing import BinaryIO, Optional
+from typing import Optional
 from fastapi import status
 
 
-def fetch_from_audd(file: BinaryIO) -> Optional[dict]:
+def fetch_from_audd(file_path: str) -> Optional[dict]:
     """Запрос с api AUDD"""
-    res = requests.post(
-        "https://api.audd.io/",
-        data={
-            "api_token": settings.AUDD_API_TOKEN,
-            "return": "apple_music,spotify",
-        },
-        files={"file": file},
-    )
+    with open(file_path, "rb") as file:
+        res = requests.post(
+            "https://api.audd.io/",
+            data={
+                "api_token": settings.AUDD_API_TOKEN,
+                "return": "apple_music,spotify",
+            },
+            files={"file": file},
+        )
+    file.close()
 
     if res.status_code == status.HTTP_200_OK:
         _data = res.json()

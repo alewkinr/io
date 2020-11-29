@@ -7,6 +7,7 @@ WORKDIR /service
 RUN pip install -r requirements.txt
 
 ENV PYTHONPATH=/service
+ENV IS_DOCKER=1
 WORKDIR /service
 
 EXPOSE $SERVER_PORT

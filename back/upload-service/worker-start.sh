@@ -3,4 +3,4 @@ set -e
 
 python /service/upload/celeryworker_pre_start.py
 
-celery worker -A upload.worker -l info -Q main-queue -c 1
+celery --app=upload.worker.worker worker -l INFO -Q main-queue -c 1

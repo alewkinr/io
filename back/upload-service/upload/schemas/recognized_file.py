@@ -10,7 +10,6 @@ class FileToRecognize(BaseModel):
 class RecognizedFile(BaseModel):
     """ Отгаданный провайдером-проверки файл """
 
-    id: int
     artist: str
     title: str
     song_link: HttpUrl
@@ -20,3 +19,9 @@ class RecognizedFileWithChekResult(RecognizedFile):
     """ Отгаданный провайдером-проверки файл """
 
     result: FileResultEnum
+
+
+class RecognizedFileWithChekResultID(RecognizedFileWithChekResult):
+    """ Файл на проверку с нужной инфой """
+
+    id: int
