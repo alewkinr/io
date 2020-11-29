@@ -9,17 +9,6 @@ volumes:
   legal-data:
 
 services:
-#  traefik:
-#    image: traefik:v2.3
-#    command: --api.insecure=true --providers.docker
-#    networks:
-#      - shared
-#    volumes:
-##      - "./infra/traefik/traefik.yaml:/etc/traefik/traefik.yaml"
-##      - "./infra/traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml"
-#      - "/var/run/docker.sock:/var/run/docker.sock"
-
-
   postgres:
     image: postgres:10.5
     restart: always
@@ -98,13 +87,6 @@ services:
       - 9090:8080
     volumes:
     - "./back/auth-service:/service"
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.auth.rule=Host(`*`)"
-#      - "traefik.http.services.auth.loadbalancer.server.port=8080"
-#      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)"
-#      - "traefik.http.routers.auth.middlewares=cors@file,stripprefix@file"
-#      - "traefik.http.routers.auth.entrypoints=web"
 
 
   upload:
@@ -132,13 +114,3 @@ services:
       - 5672:5672
     env_file:
       - ./infra/queue/.env
-
-#  flower:
-#    image: mher/flower
-#    container_name: flower
-#    networks:
-#      - shared
-#    env_file:
-#      - infra/queue/.env
-#    command:
-#      - "--broker=amqp://guest@queue:5672//"

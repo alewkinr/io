@@ -25,8 +25,6 @@ class Settings(BaseSettings):
 
     @validator("STATIC_FILES_DIR", pre=True)
     def static_directory_exists(cls, v: DirectoryPath):
-        # todo: debugging setting
-
         if not bool(getenv("IS_DOCKER")):
             return path.abspath(f"{path.pardir}/../upload-service/static")
 

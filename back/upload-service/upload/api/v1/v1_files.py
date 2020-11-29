@@ -3,13 +3,12 @@ from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, UploadFile
 from upload.api import deps
 from upload.core.errors import BadRequestErr, InternalServerErr
 from upload.crud import crud_files
 from upload.schemas import file_upload
 from upload.worker.worker import fingerprint_file
-from upload.recognizer.audd import AuddRecognizer
 
 router = APIRouter()
 logging.basicConfig(level=logging.ERROR)
@@ -41,11 +40,10 @@ async def upload_file(
     try:
         # отправляем асинхронный запрос в celery
         bt.add_task(fingerprint_file, _id=_file.id)
-        # fingerprint_file.apply_async((_file.id), retry=True)
-        return file_upload.FileStatus(id=_file.id, status=_file.status)
-
     except Exception as err:
-        return InternalServerErr(f"error to recognize file, {err}")
+        logger.error(f"error to send task to celery, {err}")
+    finally:
+        return file_upload.FileStatus(id=_file.id, status=_file.status)
 
 
 @router.get("/status", response_model=file_upload.FileStatus)
