@@ -1,11 +1,14 @@
 from abc import ABC
+from typing import Optional
+
 from upload.core.errors import FileRecognitionErr
-from . import IRecognizer
-from upload.schemas.recognized_file import RecognizedFile, RecognizedFileWithChekResult
-from typing import BinaryIO, Optional
+from upload.models.files import FileResultEnum
+from upload.schemas.recognized_file import (RecognizedFile,
+                                            RecognizedFileWithChekResult)
 from upload.utils.audd_tools import fetch_from_audd
 from upload.utils.license_supervisor_tools import get_license_status
-from upload.models.files import FileResultEnum
+
+from . import IRecognizer
 
 
 class AuddRecognizer(IRecognizer, ABC):

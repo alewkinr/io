@@ -1,5 +1,4 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
-# todo add as base
 
 COPY . /service
 COPY static /static

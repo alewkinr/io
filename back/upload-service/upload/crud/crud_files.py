@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -8,9 +8,8 @@ from upload.crud.base import CRUDBase
 from upload.models.files import File, FileStatusEnum
 from upload.schemas.file_upload import FileUpload as FileSchema
 from upload.schemas.file_upload import FileUploadInDB
-from upload.utils import generate_safe_dest, save_upload_file
 from upload.schemas.recognized_file import RecognizedFileWithChekResultID
-from upload.models.files import FileStatusEnum
+from upload.utils import generate_safe_dest, save_upload_file
 
 
 class CRUDFile(CRUDBase[File, FileSchema]):

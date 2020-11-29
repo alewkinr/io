@@ -9,7 +9,6 @@ from upload.core.errors import BadRequestErr, InternalServerErr
 from upload.crud import crud_files
 from upload.schemas import file_upload
 from upload.worker.worker import fingerprint_file
-from upload.recognizer.audd import AuddRecognizer
 
 router = APIRouter()
 logging.basicConfig(level=logging.ERROR)
@@ -41,7 +40,6 @@ async def upload_file(
     try:
         # отправляем асинхронный запрос в celery
         bt.add_task(fingerprint_file, _id=_file.id)
-        # fingerprint_file.apply_async((_file.id), retry=True)
         return file_upload.FileStatus(id=_file.id, status=_file.status)
 
     except Exception as err:
