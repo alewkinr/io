@@ -2,11 +2,10 @@ from raven import Client
 from typing import Any
 from upload.core.celery import celery_app
 from upload.core.config import settings
-from .tasks import RecognizeAudioTaskWithAudd
 from upload.crud import crud_files
 from upload.models.files import File
 from upload.schemas.recognized_file import FileToRecognize
-from typing import List, Optional
+from typing import Optional
 from upload.schemas.recognized_file import (
     RecognizedFile,
     RecognizedFileWithChekResult,
@@ -16,10 +15,7 @@ from sqlalchemy.orm import Session
 
 from upload.recognizer import IRecognizer
 from upload.recognizer.audd import AuddRecognizer
-
-from fastapi import Depends
-
-from .deps import get_db, get_recognizer
+from upload.db.session import SessionLocal
 
 client_sentry = Client(settings.SENTRY_DSN)
 
@@ -86,8 +82,12 @@ def mark_checked(
 #     _ = [mark_checked(celery=self, to_mark=item) for item in with_status]
 
 
-def fingerprint_file(rec: AuddRecognizer, db: Session, _id: int) -> Any:
+@celery_app.task(name="fingerprint_files", autoretry_for=(Exception))
+def fingerprint_file(_id: int) -> Any:
     """ Фингерпринтим файл """
+    rec: AuddRecognizer = AuddRecognizer()
+    db: Session = SessionLocal()
+
     try:
         _type = "audio"
         _init_file = crud_files.file.find_by_id(db=db, _id=_id)
