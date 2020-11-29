@@ -867,6 +867,6 @@ docker-stack.yml
 skeleton/*
 !/infra/postgres/.gitkeep
 !/infra/postgres/.env
-/infra/postgres/data
+!/infra/postgres/data
 !/back/upload-service/static/.*
 /back/upload-service/static/*
