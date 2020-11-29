@@ -6,20 +6,20 @@ from typing import Optional
 
 def get_license_status(author: str, tack_name: str) -> Optional[str]:
     """ Определяем статус лиценизии трека """
-    # todo: add endpoint url
-    _url = f"{settings.LICENCE_SUPERVISOR_BASE_URL}/"
+    _url = f"{settings.LICENCE_SUPERVISOR_BASE_URL}/api/v1/licenses/search"
     res = requests.post(
         _url,
         json={
-            "author": author,
-            "track_name": tack_name,
+            "performers": author,
+            "phonogram_title": tack_name,
         },
+        headers={"content-type": "application/json"},
     )
     if res.status_code == status.HTTP_204_NO_CONTENT:
         return None
     elif res.status_code == status.HTTP_200_OK:
         _data = res.json()
-        # todo: add contract info
+        return _data["check_result"]
     else:
         _wrap_errors(res)
 

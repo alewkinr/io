@@ -51,7 +51,6 @@ def mark_checked(
     """ Отмечаем проверенные треки в БД """
     return crud_files.file.update(
         db=db,
-        db_obj=File,
         obj_in=RecognizedFileWithChekResultID(**to_mark.dict(), id=init_file.id),
     )
 
@@ -91,14 +90,14 @@ def fingerprint_file(rec: AuddRecognizer, db: Session, _id: int) -> Any:
     """ Фингерпринтим файл """
     try:
         _type = "audio"
-        _file = crud_files.file.find_by_id(db=db, _id=_id)
-        if _file is None:
+        _init_file = crud_files.file.find_by_id(db=db, _id=_id)
+        if _init_file is None:
             return
     except Exception as err:
         print(err)
         return
 
-    _file = format_file_to_file_to_recognize(_file)
+    _file = format_file_to_file_to_recognize(_init_file)
     if _file is None:
         return None
     recognized_file = guess_file(recognizer=rec, db=db, _to_rec=_file)
@@ -106,4 +105,4 @@ def fingerprint_file(rec: AuddRecognizer, db: Session, _id: int) -> Any:
         return
 
     with_status = check_license(recognizer=rec, to_check=recognized_file)
-    mark_checked(recognizer=rec, db=db, to_mark=with_status)
+    mark_checked(db=db, init_file=_init_file, to_mark=with_status)

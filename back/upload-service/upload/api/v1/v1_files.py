@@ -38,7 +38,7 @@ async def upload_file(
 
         # отправляем асинхронный запрос в celery
         # bgt.add_task(fingerprint_file, _id=_file.id)
-        # fingerprint_file(rec=rec, db=db, _id=_file.id)
+        fingerprint_file(rec=rec, db=db, _id=_file.id)
         return file_upload.FileStatus(id=_file.id, status=_file.status)
     except Exception as err:
         return InternalServerErr(f"error to upload file, {err}")
